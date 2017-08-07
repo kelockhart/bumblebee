@@ -1,5 +1,5 @@
 define([
-  'js/widgets/facet/widget',
+  'es6!js/widgets/facet/tree/widget.jsx',
   'js/widgets/facet/graph-facet/widget'
 ], function (
   FacetWidget,

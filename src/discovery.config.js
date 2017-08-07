@@ -110,7 +110,7 @@ require.config({
         CitationHelper: 'js/widgets/citation_helper/widget',
         OrcidBigWidget: 'js/modules/orcid/widget/widget',
 
-        AuthorFacet: 'js/wraps/author_facet',
+        TreeFacet: 'es6!js/widgets/facet/tree/widget.jsx',
         BibgroupFacet: 'js/wraps/bibgroup_facet',
         BibstemFacet: 'js/wraps/bibstem_facet',
         DataFacet: 'js/wraps/data_facet',
