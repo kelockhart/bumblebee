@@ -10,7 +10,9 @@ define([
 
       if (this.props.activeNodes.length) {
         var nodes = this.props.activeNodes.map(function (n) {
-          return <Node type={n}/>;
+          return <Node
+            title={n.title}
+          />;
         });
       }
 

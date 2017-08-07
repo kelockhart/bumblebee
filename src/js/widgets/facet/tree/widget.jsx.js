@@ -63,7 +63,8 @@ define([
       pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
 
       this.store.dispatch(actions.updateActiveNodes([
-        'Author', 'Citations'
+        { title: 'AUTHORS' },
+        { title: 'COLLECTIONS' }
       ]))
     }
   });
