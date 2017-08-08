@@ -1,4 +1,5 @@
 define([
+  'underscore',
   'backbone',
   'js/components/api_query',
   'js/components/api_request',
@@ -13,7 +14,7 @@ define([
   'es6!./components/app.jsx',
   './actions',
   './reducers'
-], function (Backbone, ApiQuery, ApiRequest, BaseWidget, ApiQueryUpdater,
+], function (_, Backbone, ApiQuery, ApiRequest, BaseWidget, ApiQueryUpdater,
    analytics, React, ReactDOM, ReactRedux, Redux, ReduxThunk, App, actions, reducers) {
 
   var View = Backbone.View.extend({
@@ -34,6 +35,12 @@ define([
   });
 
   var Widget = BaseWidget.extend({
+    defaultQueryArguments: {
+      'facet': 'true',
+      'facet.mincount': '1',
+      'facet.limit': 20,
+      'fl': 'id'
+    },
     initialize: function (options) {
       this.options = _.pick(options, [
         'facetTitle', 'facetField', 'preprocessors',
@@ -43,8 +50,8 @@ define([
       //will be used by dispatchRequest
       this.defaultQueryArguments = _.extend({},
         this.defaultQueryArguments,
-        options.defaultQueryArguments, {
-          "facet.field": options.facetField
+        this.options.defaultQueryArguments, {
+          'facet.field': 'author_facet_hier'
         }
       );
 
@@ -55,17 +62,29 @@ define([
       this.view = new View ({
         store: this.store
       });
+
+      this.queryUpdater = new ApiQueryUpdater('author_facet_hier');
     },
     activate: function (beehive) {
       this.setBeeHive(beehive);
       _.bindAll(this, 'dispatchRequest', 'processResponse');
       var pubsub = this.getPubSub();
       pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
-
-      this.store.dispatch(actions.updateActiveNodes([
-        { title: 'AUTHORS' },
-        { title: 'COLLECTIONS' }
-      ]))
+    },
+    dispatchRequest: function (apiQuery) {
+      this.store.dispatch(actions.updateQuery(apiQuery));
+      //
+      // var pubsub = this.getPubSub();
+      // pubsub.subscribeOnce(pubsub.DELIVERING_RESPONSE, function (apiResponse) {
+      //   console.log('sdlkjf', apiResponse.toJSON());
+      // });
+      //
+      // var q = this.customizeQuery(this.getCurrentQuery());
+      // q.set('facet.offset', 0);
+      // q.set('rows', 1);
+      // q.set('facet.prefix', '2/');
+      // var req = this.composeRequest(q);
+      // pubsub.publish(pubsub.DELIVERING_REQUEST, req);
     }
   });
 

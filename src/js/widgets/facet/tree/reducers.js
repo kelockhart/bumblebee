@@ -1,9 +1,12 @@
 'use strict';
-define([], function () {
+define([
+  'json!js/widgets/facet/tree/facets.config.json'
+], function (facets) {
 
   var initialState = function () {
     return {
-      activeNodes: []
+      facets: facets,
+      query: null
     };
   };
 
@@ -18,9 +21,9 @@ define([], function () {
     state = state ? state : initialState();
 
     switch(action.type) {
-      case 'UPDATE_ACTIVE_NODES':
+      case 'UPDATE_QUERY':
         return Object.assign({}, state, {
-          activeNodes: action.value
+          query: action.query
         });
       default:
         return state;

@@ -1,0 +1,19 @@
+[{
+  "hierarchical": true,
+  "facetField": "author_facet_hier",
+  "facetTitle": "Authors",
+  "openByDefault": true,
+  "logicOptions": {
+    "single": ["limit to", "exclude"],
+    "multiple": ["and", "or", "exclude"]
+  }
+}, {
+  "hierarchical": true,
+  "facetField": "database",
+  "facetTitle": "Collections",
+  "openByDefault": false,
+  "logicOptions": {
+    "single": ["limit to", "exclude"],
+    "multiple": ["and", "or", "exclude"]
+  }
+}]

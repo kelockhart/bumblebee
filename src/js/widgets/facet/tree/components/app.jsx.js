@@ -1,20 +1,29 @@
 define([
-  '../actions',
+  'js/widgets/facet/tree/actions',
   'react',
   'react-redux',
-  'es6!./node.jsx'
-], function (actions, React, ReactRedux, Node) {
+  'es6!js/widgets/facet/tree/components/simple-node.jsx',
+  'es6!js/widgets/facet/tree/components/hierarchical-node.jsx'
+], function (actions, React, ReactRedux, SimpleNode, HierarchicalNode) {
 
   var App = React.createClass({
     render: function () {
+      var props = this.props;
 
-      if (this.props.activeNodes.length) {
-        var nodes = this.props.activeNodes.map(function (n) {
-          return <Node
-            title={n.title}
-          />;
-        });
-      }
+      // Create a new facet Node for each field
+      var nodes = props.facets.map(function (facetInfo) {
+        if (facetInfo.hierarchical) {
+          return <HierarchicalNode
+            {...facetInfo}
+            createApiRequest={props.createApiRequest}
+          />
+        } else {
+          return <SimpleNode
+            {...facetInfo}
+            createApiRequest={props.createApiRequest}
+          />
+        }
+      });
 
       return (
         <div className="facet__container">
@@ -26,12 +35,17 @@ define([
 
   var mapStateToProps = function (state) {
     return {
-      activeNodes: state.activeNodes
+      facets: state.facets,
+      query: state.query
     };
   };
 
   var mapDispatchToProps = function (dispatch) {
-    return {};
+    return {
+      createApiRequest: function (data, cb) {
+        dispatch(actions.createApiRequest(data, cb));
+      }
+    };
   };
 
   return ReactRedux.connect(mapStateToProps, mapDispatchToProps)(App);
