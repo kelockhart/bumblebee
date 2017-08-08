@@ -214,7 +214,9 @@ require.config({
     'select2' : 'libs/select2/select2',
     'sinon': '../bower_components/sinon/index',
     'sprintf': 'libs/sprintf/sprintf',
-    'squire': '../bower_components/squire/src/Squire'
+    'squire': '../bower_components/squire/src/Squire',
+    'text': '../bower_components/requirejs-plugins/lib/text',
+    'json': '../bower_components/requirejs-plugins/src/json'
 
   },
 
