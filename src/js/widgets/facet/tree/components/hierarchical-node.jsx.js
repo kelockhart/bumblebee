@@ -1,7 +1,13 @@
 'use strict';
 define([
+<<<<<<< Updated upstream
   'react'
 ], function (React) {
+=======
+  'react',
+  'es6!./hierarchical-item.jsx'
+], function (React, HierarchicalItem) {
+>>>>>>> Stashed changes
 
   var HierarchicalNode = React.createClass({
     getInitialState: function () {
@@ -13,9 +19,15 @@ define([
       };
     },
     componentWillMount: function () {
+<<<<<<< Updated upstream
       this.makeRequest();
     },
     makeRequest: function () {
+=======
+      this.makeInitialRequest();
+    },
+    makeInitialRequest: function () {
+>>>>>>> Stashed changes
       if (this.state.isOpen && !this.state.receivedResponse) {
         this.props.createApiRequest({
           field: this.props.facetField,
@@ -54,6 +66,7 @@ define([
       if (this.state.isLoading) {
         return false;
       }
+<<<<<<< Updated upstream
       this.setState({ isOpen: !this.state.isOpen }, function () {
         this.makeRequest();
       });
@@ -62,11 +75,27 @@ define([
       var icon = <i
         className={`facet__icon facet__icon--${(this.state.isOpen) ? 'open' : 'closed'}`}
         role="button" aria-pressed="false"></i>;
+=======
+
+      // User toggled one of the items open, make the request for the initial entry
+      this.setState({
+        isOpen: !this.state.isOpen
+      }, function () {
+        this.makeInitialRequest();
+      });
+    },
+    render: function () {
+      var props = this.props;
+      var icon = <i
+        className={`facet__icon facet__icon--${(this.state.isOpen) ? 'open' : 'closed'}`}
+        role="button" aria-pressed="false" onClick={this.toggleOpen}></i>;
+>>>>>>> Stashed changes
       if (this.state.isLoading) {
         icon = <i className="fa fa-refresh fa-spin fa-fw" aria-hidden="true"></i>;
       }
 
       var items = this.state.entries.map(function (e) {
+<<<<<<< Updated upstream
         return (
           <label className="facet-label">
             <input type="checkbox" value="on"/>
@@ -83,6 +112,19 @@ define([
         <div className="facet__toggle" onClick={this.toggleOpen} disabled={this.state.isLoading}>
           {icon}
           <h3 className="facet__header">{this.props.facetTitle}</h3>
+=======
+        return (<HierarchicalItem
+          title={e.title}
+          count={e.count}
+          createApiRequest={props.createApiRequest}
+        ></HierarchicalItem>);
+      });
+
+      return (
+        <div className="facet__toggle" disabled={this.state.isLoading}>
+          {icon}
+          <h3 className="facet__header" onClick={this.toggleOpen}>{props.facetTitle}</h3>
+>>>>>>> Stashed changes
           {items}
         </div>
       );

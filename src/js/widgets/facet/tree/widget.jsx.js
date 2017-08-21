@@ -67,6 +67,7 @@ define([
     },
     activate: function (beehive) {
       this.setBeeHive(beehive);
+<<<<<<< Updated upstream
       _.bindAll(this, 'dispatchRequest', 'processResponse');
       var pubsub = this.getPubSub();
       pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
@@ -85,6 +86,18 @@ define([
       // q.set('facet.prefix', '2/');
       // var req = this.composeRequest(q);
       // pubsub.publish(pubsub.DELIVERING_REQUEST, req);
+=======
+      _.bindAll(this, 'dispatchRequest', 'processResponse', 'handleFeedback');
+      var pubsub = this.getPubSub();
+      pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
+      pubsub.subscribe(pubsub.FEEDBACK, this.handleFeedback);
+    },
+    dispatchRequest: function (apiQuery) {
+      this.store.dispatch(actions.updateQuery(apiQuery));
+    },
+    handleFeedback: function (feedback) {
+      this.store.dispatch(actions.handleFeedback(feedback));
+>>>>>>> Stashed changes
     }
   });
 
