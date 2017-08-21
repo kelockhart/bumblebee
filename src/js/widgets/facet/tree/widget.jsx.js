@@ -67,26 +67,6 @@ define([
     },
     activate: function (beehive) {
       this.setBeeHive(beehive);
-<<<<<<< Updated upstream
-      _.bindAll(this, 'dispatchRequest', 'processResponse');
-      var pubsub = this.getPubSub();
-      pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
-    },
-    dispatchRequest: function (apiQuery) {
-      this.store.dispatch(actions.updateQuery(apiQuery));
-      //
-      // var pubsub = this.getPubSub();
-      // pubsub.subscribeOnce(pubsub.DELIVERING_RESPONSE, function (apiResponse) {
-      //   console.log('sdlkjf', apiResponse.toJSON());
-      // });
-      //
-      // var q = this.customizeQuery(this.getCurrentQuery());
-      // q.set('facet.offset', 0);
-      // q.set('rows', 1);
-      // q.set('facet.prefix', '2/');
-      // var req = this.composeRequest(q);
-      // pubsub.publish(pubsub.DELIVERING_REQUEST, req);
-=======
       _.bindAll(this, 'dispatchRequest', 'processResponse', 'handleFeedback');
       var pubsub = this.getPubSub();
       pubsub.subscribe(pubsub.INVITING_REQUEST, this.dispatchRequest);
@@ -97,7 +77,6 @@ define([
     },
     handleFeedback: function (feedback) {
       this.store.dispatch(actions.handleFeedback(feedback));
->>>>>>> Stashed changes
     }
   });
 

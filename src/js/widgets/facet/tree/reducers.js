@@ -6,10 +6,7 @@ define([
   var initialState = function () {
     return {
       facets: facets,
-<<<<<<< Updated upstream
-=======
       hasError: false,
->>>>>>> Stashed changes
       query: null
     };
   };
@@ -29,13 +26,10 @@ define([
         return Object.assign({}, state, {
           query: action.query
         });
-<<<<<<< Updated upstream
-=======
       case 'HAS_ERROR':
         return Object.assign({}, state, {
           hasError: action.hasError
         });
->>>>>>> Stashed changes
       default:
         return state;
     }

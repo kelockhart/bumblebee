@@ -2,21 +2,13 @@
   "hierarchical": true,
   "facetField": "author_facet_hier",
   "facetTitle": "Authors",
-<<<<<<< Updated upstream
-  "openByDefault": true,
-=======
   "openByDefault": false,
->>>>>>> Stashed changes
   "logicOptions": {
     "single": ["limit to", "exclude"],
     "multiple": ["and", "or", "exclude"]
   }
 }, {
-<<<<<<< Updated upstream
-  "hierarchical": true,
-=======
   "hierarchical": false,
->>>>>>> Stashed changes
   "facetField": "database",
   "facetTitle": "Collections",
   "openByDefault": false,

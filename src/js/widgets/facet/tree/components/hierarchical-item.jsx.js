@@ -21,7 +21,10 @@ define([
 				isOpen: this.props.openByDefault,
 				recievedResponse: false,
 				showReloadButton: false,
-				children: []
+				children: [],
+				maxPageSize: 5,
+				totalChildren: 0,
+				page: 0
 			};
 		},
 
@@ -39,6 +42,7 @@ define([
 					// After UI Updates, make the api request
 					_.debounce(_.partial(this.props.createApiRequest, {
 						field: this.props.field,
+						offset: this.state.page * this.state.maxPageSize,
 						hierarchical: true
 					}, function (promise) {
 						promise
@@ -111,7 +115,14 @@ define([
 		onResponse: function (apiResponse) {
 			console.log('DONE', apiResponse);
 			var items = apiResponse.get('facet_counts')['facet_fields'][this.props.field];
+			var totalItems = apiResponse.get('response').docs.numFound;
+			var offset = apiResponse.get('responseHeader').params['facet.offset'];
 			var children = [];
+
+			// if there have been some paging, we want to
+			if (offset && Number(offset) > 0) {
+				children = this.state.children;
+			}
 
 			// Loop through items array, mapping to new array
 			for (var i = 0; i < items.length; i += 2) {
@@ -128,7 +139,8 @@ define([
 				recievedResponse: true,
 				children: children,
 				showReloadButton: false,
-				isOpen: true
+				isOpen: true,
+				totalChildren: totalItems
 			}, function () {
 				this.setState({ loading: false });
 			});
@@ -153,6 +165,22 @@ define([
 			this.setState({
 				loading: false,
 				isOpen: false
+			});
+		},
+
+		updatePage: function (value) {
+			this.setState({
+				page: this.state.page + value
+			}, function () {
+
+				// check to see if we must make a request to get more
+				if (this.state.page * this.state.maxPageSize % 20 === 0) {
+					this.setState({
+						recievedResponse: false
+					}, function () {
+						this.makeRequest();
+					});
+				}
 			});
 		},
 
@@ -189,7 +217,17 @@ define([
 			};
 
 			var createChildren = function () {
-				var children = self.state.children.map(function (child) {
+
+				// calculate the number of children to show
+				var shown = (self.state.page + 1) * self.state.maxPageSize;
+
+				var children = self.state.children.map(function (child, index) {
+
+					// check to see if this child is shown on the current page
+					if (index > shown - 1) {
+						return null;
+					}
+
 					return (<ChildNode
 						title={child.title}
 						count={child.count}
@@ -200,14 +238,50 @@ define([
 				return children;
 			};
 
+			var createPaginationButtons = function (more, less) {
+				var classes = 'btn btn-default btn-xs facet__pagination-button';
+				var increase = _.partial(self.updatePage, 1);
+				var decrease = _.partial(self.updatePage, -1);
+				return (
+					<div className="facet__pagination-container">
+						{ (less) ? <button
+							className={classes}
+							onClick={decrease}
+						>less</button> : null }
+						{ (more) ? <button
+							className={classes}
+							onClick={increase}
+						>more</button> : null }
+					</div>
+				);
+			};
+
+			// control which icon should show
 			var icon = null;
-			if (this.state.loading) {
-				icon = createLoadingIcon();
-			} else if (this.state.showReloadButton) {
-				icon = createReloadIcon();
-			} else {
-				icon = createCaretIcon();
+			switch(true) {
+				case this.state.loading:
+					icon = createLoadingIcon(); break;
+				case this.state.showReloadButton:
+					icon = createReloadIcon(); break;
+				default:
+					icon = createCaretIcon();
 			}
+
+			// control which pagination buttons should show
+			var pager = null;
+			if (this.state.children.length > this.state.maxPageSize) {
+				if (this.state.loading || !this.state.isOpen) {
+					pager = null;
+				}
+				switch(this.state.page) {
+					case 0:
+						pager = createPaginationButtons(true); break;
+					case this.state.totalChildren / this.state.maxPageSize:
+						pager = createPaginationButtons(false, true); break;
+					default:
+						pager = createPaginationButtons(true, true);
+				}
+			};
 
 			return (
 				<div className="facet__toggle" disabled={this.state.loading}>
@@ -215,6 +289,7 @@ define([
 					<h3 className="facet__header" onClick={this.toggleOpen}>{this.props.title}</h3>
 					<div className="facet__list-container">
 						{this.state.children.length && this.state.isOpen ? createChildren() : null}
+						{pager}
 					</div>
 				</div>
 			);
