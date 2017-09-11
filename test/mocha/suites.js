@@ -16,6 +16,7 @@ define([
      '/components/api_query.spec',
      '/components/json_response.spec',
      '/components/api_response.spec',
+     '/components/api_cache_request.spec',
      '/components/generic_module.spec',
      '/components/pubsub_key.spec',
      '/components/facade.spec',
