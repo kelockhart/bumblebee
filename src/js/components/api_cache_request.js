@@ -60,135 +60,146 @@ define([
     this.lock = true;
 
     // starts up an interval
-    this._cycleInterval = setInterval(_.bind(function () {
-      this.lock = false;
-
-      var entries = [];
-      if (this.pendingPutsQueue.length > 0) {
-
-        entries = this.createEntries(this.pendingPutsQueue);
-
-        _.forEach(entries, _.bind(this._put, this));
-      }
-
-      if (this.pendingGetsQueue.length > 0) {
-
-        entries = this.createEntries(this.pendingGetsQueue);
-
-        _.forEach(entries, _.bind(this._get, this));
-      }
-
-      this.lock = true;
-    }, this), CYCLE_WAIT);
+    // this._cycleInterval = setInterval(_.bind(function () {
+    //   this.lock = false;
+    //
+    //   var entries = [];
+    //   if (this.pendingPutsQueue.length > 0) {
+    //
+    //     entries = this.createEntries(this.pendingPutsQueue);
+    //
+    //     _.forEach(entries, _.bind(this._put, this));
+    //   }
+    //
+    //   if (this.pendingGetsQueue.length > 0) {
+    //
+    //     entries = this.createEntries(this.pendingGetsQueue);
+    //
+    //     _.forEach(entries, _.bind(this._get, this));
+    //   }
+    //
+    //   this.lock = true;
+    // }, this), CYCLE_WAIT);
   };
 
   RequestCache.prototype.destroy = function () {
-    clearInterval(this._cycleInterval);
-    this._cycleInterval = null;
+    // clearInterval(this._cycleInterval);
+    // this._cycleInterval = null;
   };
 
   RequestCache.prototype._createEntry = function (response, promise) {
-    var entry = {
-      query: response.getApiQuery(),
-      fields: response.getApiQuery().get('fl')[0],
-      response: response
-    };
-
-  };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  RequestCache.prototype._createEntry = function (entryObject) {
-
-    var obj = {};
-    if (entryObject.response) {
-      obj.query = entryObject.response.getApiQuery();
-      obj.fields = obj.query.get('fl')[0];
-      obj.response = entryObject.response;
-      obj.query.unset('fl');
-      obj.url = obj.response.url();
-    } else if (entryObject.request) {
-      obj.query = entryObject.request.get('query');
-      obj.fields = obj.query.get('fl')[0];
-      obj.request = entryObject.request;
-      obj.query.unset('fl');
-      obj.url = obj.request.url();
-    }
-
-    obj.promise = entryObject.promise;
-
-    return obj;
-  };
-
-  RequestCache.prototype.createEntries = function (requests) {
-    return _.map(requests, this._createEntry);
-  };
-
-  RequestCache.prototype.put = function (response) {
-    if (!this._validateResponse(response) ) {
-      return false;
-    }
-
-    // create a new deferred object
-    var deferred = $.Deferred();
-
-    // push the request onto the queue
-    this.pendingPutsQueue.push({
-      response: response,
-      promise: deferred
-    });
-
-    // return a promise
-    return deferred.promise();
+    // var query = response.getApiQuery();
+    // var entry = {
+    //   query: query,
+    //   fields: query.get('fl')[0],
+    //   response: response
+    //   promise: promise
+    // };
+    // query.unset('fl');
+    // entry.url = response.url();
+    // return entry;
   };
 
   RequestCache.prototype.get = function (request) {
-    if (!this._validate(request) ) {
-      return false;
-    }
 
-    // create a new deferred object
-    var deferred = $.Deferred();
-
-    // push the request onto the queue
-    this.pendingGetsQueue.push({
-      request: request,
-      promise: deferred
-    });
-
-    // return a promise
-    return deferred.promise();
   };
 
-  RequestCache.prototype._put = function (entry) {
 
-    console.log('PUTTING: ', entry);
-    this._cache.put(entry.url, entry.response);
-  };
+  //
+  //
+  //
+  // RequestCache.prototype._put = function (entry) {
+  //
+  //   console.log('PUTTING: ', entry);
+  //   this._cache.put(entry.url, entry.response);
+  // };
+  //
+  // RequestCache.prototype._get = function (entry) {
+  //
+  //   console.log('GETTING: ', entry);
+  //   this._cache.get(entry.url, function (data) {
+  //     entry.promise.resolve(data);
+  //   });
+  // };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // // RequestCache.prototype._createEntry = function (entryObject) {
+  // //
+  // //   var obj = {};
+  // //   if (entryObject.response) {
+  // //     obj.query = entryObject.response.getApiQuery();
+  // //     obj.fields = obj.query.get('fl')[0];
+  // //     obj.response = entryObject.response;
+  // //     obj.query.unset('fl');
+  // //     obj.url = obj.response.url();
+  // //   } else if (entryObject.request) {
+  // //     obj.query = entryObject.request.get('query');
+  // //     obj.fields = obj.query.get('fl')[0];
+  // //     obj.request = entryObject.request;
+  // //     obj.query.unset('fl');
+  // //     obj.url = obj.request.url();
+  // //   }
+  // //
+  // //   obj.promise = entryObject.promise;
+  // //
+  // //   return obj;
+  // // };
+  //
+  // // RequestCache.prototype.createEntries = function (requests) {
+  // //   return _.map(requests, this._createEntry);
+  // // };
+  //
+  // RequestCache.prototype.put = function (response) {
+  //   if (!this._validateResponse(response) ) {
+  //     return false;
+  //   }
+  //
+  //   // create a new deferred object
+  //   var deferred = $.Deferred();
+  //
+  //   // push the request onto the queue
+  //   this.pendingPutsQueue.push({
+  //     response: response,
+  //     promise: deferred
+  //   });
+  //
+  //   // return a promise
+  //   return deferred.promise();
+  // };
+  //
+  // RequestCache.prototype.get = function (request) {
+  //   if (!this._validate(request) ) {
+  //     return false;
+  //   }
+  //
+  //   // create a new deferred object
+  //   var deferred = $.Deferred();
+  //
+  //   // push the request onto the queue
+  //   this.pendingGetsQueue.push({
+  //     request: request,
+  //     promise: deferred
+  //   });
+  //
+  //   // return a promise
+  //   return deferred.promise();
+  // };
 
-  RequestCache.prototype._get = function (entry) {
 
-    console.log('GETTING: ', entry);
-    this._cache.get(entry.url, function (data) {
-      entry.promise.resolve(data);
-    });
-  };
 
   return RequestCache;
 });
