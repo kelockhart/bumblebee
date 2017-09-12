@@ -87,6 +87,33 @@ define([
     this._cycleInterval = null;
   };
 
+  RequestCache.prototype._createEntry = function (response, promise) {
+    var entry = {
+      query: response.getApiQuery(),
+      fields: response.getApiQuery().get('fl')[0],
+      response: response
+    };
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   RequestCache.prototype._createEntry = function (entryObject) {
 
     var obj = {};

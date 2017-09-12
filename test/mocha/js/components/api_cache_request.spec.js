@@ -10,18 +10,30 @@ define([
   var buildRequest = function (options) {
     options = options || {};
     options.target = (options.target) ? options.target : 'search/query';
-    options.q = (options.q) ? options.q : 'bibcode:2014AJ....147..124M';
-    options.f = (options.f) ? options.f : 'id';
+
+    var f = function () {
+      var fl = 'title,bibcode,author,keyword,pub,aff,volume,year,links_data,[citations],property,pubdate,abstract';
+      return _.shuffle(fl.split(',')).join(',');
+    };
+
+    var q = function () {
+      return 'bibcode:' + _.random(2000, 2017) +
+        'J....' + _.random(100, 200) + '..124M';
+    };
 
     var request = new ApiRequest({
       target: options.target,
       query: new ApiQuery({
-        q: options.q,
-        fl: options.f
+        q: options.q || q(),
+        fl: options.f || f()
       })
     });
 
     return request;
+  };
+
+  var buildResponse = function () {
+
   };
 
   describe('API Request Cache', function () {
@@ -39,6 +51,12 @@ define([
     it('instantiates', function () {
       expect(cache).to.be.instanceOf(RequestCache);
     });
+
+
+
+
+
+
 
     it('properly validates request', function () {
       var request = buildRequest({ target: 'test' });
