@@ -41,8 +41,8 @@ define([
           this.getController('QueryMediator').debug = conf.debug;
         }
 
-        if (conf.apiRoot) {
-          api.url = conf.apiRoot;
+        if (conf.apiProxy) {
+          api.url = conf.apiProxy;
         }
 
         if (conf.version) {
